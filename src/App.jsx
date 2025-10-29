@@ -37,11 +37,14 @@ const App = () => {
 
         const allDraft = projectTasks.every(t => (t.status || '').toLowerCase() === 'draft')
         const allDone = projectTasks.every(t => (t.status || '').toLowerCase() === 'done')
-        const anyProgress = projectTasks.some(t => (t.status || '').toLowerCase() === 'in progress' || (t.status || '').toLowerCase() === 'inprogress')
+        const anyActive = projectTasks.some(t => {
+            const s = (t.status || '').toLowerCase()
+            return s === 'in progress' || s === 'inprogress' || s === 'done'
+        })
 
         let status = 'Draft'
         if (allDone) status = 'Done'
-        else if (anyProgress) status = 'In Progress'
+        else if (anyActive) status = 'In Progress'
         else if (allDraft) status = 'Draft'
 
         return { status, progress }
@@ -237,9 +240,9 @@ const App = () => {
                                 <ItemActions>
                                     <Badge
                                         className={
-                                            displayStatus.toLowerCase() === 'done'
+                                            task.status.toLowerCase() === 'done'
                                                 ? 'bg-green-500 text-white'
-                                                : displayStatus.toLowerCase() === 'in progress'
+                                                : task.status.toLowerCase() === 'in progress'
                                                     ? 'bg-yellow-500 text-white'
                                                     : 'bg-gray-500 text-white'
                                         }
